@@ -33,43 +33,43 @@ public class Board3Ctr {
      */
     @RequestMapping(value = "/board3List")
     public String boardList(SearchVO searchVO, ModelMap modelMap) {
-    	String queryStr = "";
-    	String searchType = searchVO.getSearchType();
-    	String searchKeyword = searchVO.getSearchKeyword();
-    	if (searchKeyword!=null && !"".equals(searchKeyword)) {
-    		String[] searchTypeArr = searchType.split(",");
-    		for (int i=0; i<searchTypeArr.length; i++) {
-    			if (queryStr.length()>0) queryStr += " AND "; 
-    			queryStr += searchTypeArr[i] + ":*" + searchKeyword + "*"; 
-    		}
-    	} else {
-    		queryStr = "*:*";
-    	}
-    	
-    	SolrQuery query = new SolrQuery();
-    	query.setQuery(queryStr);
-    	query.setFields("");
-    	query.addSort("id", ORDER.desc);
-		try {
-			// return result count only for paging			
-	    	query.setRows(0);	
-			QueryResponse rsp = solr.query(query);
-	    	SolrDocumentList docs=rsp.getResults();  
-	    	int total = (int) docs.getNumFound();
-	    	searchVO.pageCalculate(total);
-	    			
-	    	// return result data
-	    	query.setStart(searchVO.getRowStart()-1);							
-	    	query.setRows(10);
-			QueryResponse rsp1 = solr.query(query); 
-	    	docs=rsp1.getResults();  
-	    	
-	    	modelMap.addAttribute("listview", docs);
-	    	modelMap.addAttribute("pageVO", searchVO);
-		} catch (SolrServerException | IOException e) {
-			logger.error("list error");
-		}
-    	
+        String queryStr = "";
+        String searchType = searchVO.getSearchType();
+        String searchKeyword = searchVO.getSearchKeyword();
+        if (searchKeyword!=null && !"".equals(searchKeyword)) {
+            String[] searchTypeArr = searchType.split(",");
+            for (int i=0; i<searchTypeArr.length; i++) {
+                if (queryStr.length()>0) queryStr += " AND "; 
+                queryStr += searchTypeArr[i] + ":*" + searchKeyword + "*"; 
+            }
+        } else {
+            queryStr = "*:*";
+        }
+        
+        SolrQuery query = new SolrQuery();
+        query.setQuery(queryStr);
+        query.setFields("");
+        query.addSort("id", ORDER.desc);
+        try {
+            // return result count only for paging            
+            query.setRows(0);    
+            QueryResponse rsp = solr.query(query);
+            SolrDocumentList docs=rsp.getResults();  
+            int total = (int) docs.getNumFound();
+            searchVO.pageCalculate(total);
+                    
+            // return result data
+            query.setStart(searchVO.getRowStart()-1);                            
+            query.setRows(10);
+            QueryResponse rsp1 = solr.query(query); 
+            docs=rsp1.getResults();  
+            
+            modelMap.addAttribute("listview", docs);
+            modelMap.addAttribute("pageVO", searchVO);
+        } catch (SolrServerException | IOException e) {
+            logger.error("list error");
+        }
+        
         return "board3/boardList";
     }
     
@@ -78,11 +78,11 @@ public class Board3Ctr {
      */
     @RequestMapping(value = "/board3Form")
     public String boardForm(HttpServletRequest request, ModelMap modelMap) {
-    	String brdno = request.getParameter("brdno");
-    	if (brdno!=null) {
-    		getOneboard(brdno, modelMap);
-    	}
-    	
+        String brdno = request.getParameter("brdno");
+        if (brdno!=null) {
+            getOneboard(brdno, modelMap);
+        }
+        
         return "board3/boardForm";
     }
     
@@ -91,12 +91,12 @@ public class Board3Ctr {
      */
     @RequestMapping(value = "/board3Save")
     public String boardSave(HttpServletRequest request, BoardVO boardInfo) {
-    	String brdno = boardInfo.getBrdno();
-    	if (brdno==null || "".equals(brdno)) {
-    		boardInfo.setBrdno( getNewBrdno() );
-    		boardInfo.setBrddate( Now() );
-    	}
-    	
+        String brdno = boardInfo.getBrdno();
+        if (brdno==null || "".equals(brdno)) {
+            boardInfo.setBrdno( getNewBrdno() );
+            boardInfo.setBrddate( Now() );
+        }
+        
         SolrInputDocument solrDoc = new SolrInputDocument();
         solrDoc.addField("id", boardInfo.getBrdno());
         solrDoc.addField("brdtitle", boardInfo.getBrdtitle());
@@ -106,10 +106,10 @@ public class Board3Ctr {
          
         try {
             solr.add(solrDoc);
-			solr.commit();
-		} catch (SolrServerException | IOException e) {
-			logger.error("save error");
-		}
+            solr.commit();
+        } catch (SolrServerException | IOException e) {
+            logger.error("save error");
+        }
         
         return "redirect:/board3List";
     }
@@ -128,41 +128,41 @@ public class Board3Ctr {
      */
     @RequestMapping(value = "/board3Read")
     public String boardRead(HttpServletRequest request, ModelMap modelMap) {
-    	String brdno = request.getParameter("brdno");
-    	getOneboard(brdno, modelMap);
+        String brdno = request.getParameter("brdno");
+        getOneboard(brdno, modelMap);
   
         return "board3/boardRead";
     }
     
     private void getOneboard(String brdno, ModelMap modelMap) {
-    	SolrQuery query = new SolrQuery();
-    	query.setQuery("id:" + brdno);
-    	query.setRows(1);
-		try {
-			QueryResponse rsp = solr.query(query);
-	    	SolrDocumentList docs=rsp.getResults();  
-	    	for(int i=0;i<docs.getNumFound();i++){
-	    	    System.out.println(docs.get(i));
+        SolrQuery query = new SolrQuery();
+        query.setQuery("id:" + brdno);
+        query.setRows(1);
+        try {
+            QueryResponse rsp = solr.query(query);
+            SolrDocumentList docs=rsp.getResults();  
+            for(int i=0;i<docs.getNumFound();i++){
+                System.out.println(docs.get(i));
             }
-	    	modelMap.addAttribute("boardInfo", docs.get(0));
-		} catch (SolrServerException | IOException e) {
-			logger.error("read error");
-		}        
+            modelMap.addAttribute("boardInfo", docs.get(0));
+        } catch (SolrServerException | IOException e) {
+            logger.error("read error");
+        }        
     }    
     /**
      * 글 삭제.
      */
     @RequestMapping(value = "/board3Delete")
     public String boardDelete(HttpServletRequest request) {
-    	String brdno = request.getParameter("brdno");
+        String brdno = request.getParameter("brdno");
         
-    	try {
-			solr.deleteByQuery("id:" + brdno);
-	    	solr.commit();
-		} catch (SolrServerException | IOException e) {
-			logger.error("delete error");
-		}
-    	
+        try {
+            solr.deleteByQuery("id:" + brdno);
+            solr.commit();
+        } catch (SolrServerException | IOException e) {
+            logger.error("delete error");
+        }
+        
         return "redirect:/board3List";
     }
 
