@@ -26,7 +26,7 @@ import gu.sworld.solrBoard.common.PageVO;
 public class Board2Ctr {
 
     private static final Logger logger = LoggerFactory.getLogger(Board2Ctr.class);
-    private static final SolrClient solr = new HttpSolrClient.Builder("http://localhost:8983/solr/solrBoard1").build();
+    private static final SolrClient solr = new HttpSolrClient.Builder("http://localhost:8983/solr/solrBoard").build();
     
     /**
      * 리스트.

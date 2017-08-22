@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class Board1Ctr {
 
     private static final Logger logger = LoggerFactory.getLogger(Board1Ctr.class);
-    private static final SolrClient solr = new HttpSolrClient.Builder("http://localhost:8983/solr/solrBoard1").build();
+    private static final SolrClient solr = new HttpSolrClient.Builder("http://localhost:8983/solr/solrBoard").build();
     
     /**
      * 리스트.
