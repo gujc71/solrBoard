@@ -24,5 +24,7 @@ Download this example (solrBoard) and run it on Tomcat.
 Enter the following URL in your web browser:
 
 	http://localhost:8080/solrBoard/board1List
+	http://localhost:8080/solrBoard/board2List
+	http://localhost:8080/solrBoard/board3List
 
 
